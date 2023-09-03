@@ -6,11 +6,11 @@ import './App.css'
 function App() {
   const [foodData,setFoodData] = useState(MenuData)
   const [dataInPage,setDataInPage] = useState([])
+  const [page,setPage] = useState(0)
 
   const pagination=()=>{
-    const foodPerPage = 5
+    const foodPerPage = 3
     const pages = Math.ceil(MenuData.length / foodPerPage)
-    console.log("page number =",pages)
 
     const newFood=Array.from({length:pages},(data,index)=>{
       const start = index * foodPerPage
@@ -19,10 +19,15 @@ function App() {
     return newFood
   }
 
+  const handlePage=(index)=>{
+    setPage(index)
+  }
+
   useEffect(()=>{
     const paginate=pagination()
     setDataInPage(paginate)
-  },[])
+    setFoodData(paginate[page])
+  },[page])
 
   return (
     <div className="App">
@@ -35,7 +40,10 @@ function App() {
       <div className="pagination-container">
         {dataInPage.map((data,index)=>{
           return(
-            <button>{index+1}</button>
+            <button key={index} 
+            onClick={()=>handlePage(index)}
+            className={`page-btn ${index===page ? "active-btn" : null}`}
+            >{index+1}</button>
           )
         })}
       </div>
